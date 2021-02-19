@@ -1,0 +1,21 @@
+
+[
+java:S18743"9Remove this use of "PreferenceManager"; it is deprecated.(ÜÏò¿ıÿÿÿÿ8‹ÑÜØù.
+o	java:S100N"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(È¢úıÿÿÿÿ8‹ÑÜØù.
+C	java:S131d""Add a default case to this switch.(×ö³–úÿÿÿÿ8‹ÑÜØù.
+G
+java:S5411‹"*Use the primitive boolean expression here.(·†ÿn8µºÓ’ú.
+w	java:S116!"VRename this field "tv_latitude" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë™©ÿúÿÿÿÿ8‹ÑÜØù.
+e
+java:S18743"CRemove this use of "getDefaultSharedPreferences"; it is deprecated.(ÜÏò¿ıÿÿÿÿ8‹ÑÜØù.
+X
+java:S1874":Remove this use of "getRunningServices"; it is deprecated.(¹èÎ·8†Áû.
+x	java:S116!"WRename this field "tv_longitude" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë™©ÿúÿÿÿÿ8‹ÑÜØù.
+|	java:S116'"[Rename this field "current_distance" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¡ğãşÿÿÿÿ8âçìÕú.
+J
+java:S1199e"-Extract this nested code block into a method.(©°ÿ»8‹ÑÜØù.
+m
+java:S1301d"KReplace this "switch" statement by "if" statements to increase readability.(×ö³–úÿÿÿÿ8‹ÑÜØù.
+u	java:S116"TRename this field "btn_start" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(û¸ÁÉûÿÿÿÿ8‹ÑÜØù.
+~	java:S116 "]Rename this field "boolean_permission" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—âí’úÿÿÿÿ8‹ÑÜØù.
+w	java:S116!"VRename this field "tv_locality" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ë™©ÿúÿÿÿÿ8‹ÑÜØù.

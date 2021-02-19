@@ -1,0 +1,44 @@
+
+k
+java:S1192|"IDefine a constant instead of duplicating this literal "latitude" 3 times.(ØœÚáıÿÿÿÿ8¤ìÃ’ú.
+x	java:S116."\Rename this field "critical_distance" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(çÛ–¹8¯¥³»ú.
+
+java:S1186T"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÀÄŞ’8¯¥³»ú.
+|	java:S1161"[Rename this field "current_distance" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÕÉËÍùÿÿÿÿ8¯¥³»ú.
+Q
+java:S1874("/Remove this use of "Handler"; it is deprecated.(×»ëØşÿÿÿÿ8¯¥³»ú.
+t
+java:S3252m"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(¥êêí8€ÑÏû.
+w
+java:S1450)"URemove the "mTimer" field and declare it as a local variable in the relevant methods.(®µŠÒøÿÿÿÿ8¯¥³»ú.
+t
+java:S3252m"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(¥êêí8€ÑÏû.
+Q
+java:S1128"4Remove this unused import 'android.content.Context'.(©Ê‰è8ª“û.
+u
+java:S3252Œ"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(¥êêí8€ÑÏû.
+g
+java:S1874T"JDon't override a deprecated method or explicitly mark it as "@Deprecated".(ÀÄŞ’8¯¥³»ú.
+X	java:S125¤"<This block of commented-out lines of code should be removed.(úÏÇL8íŸêüú.
+j	java:S100b"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬³Ç—8¯¥³»ú.
+U
+java:S1135"2Complete the task associated to this TODO comment.(áÃæùÿÿÿÿ8¯¥³»ú.
+
+java:S1186Y"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(çÅğÙ8¯¥³»ú.
+{	java:S116*"ZRename this field "notify_interval" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(êÃÇ‰şÿÿÿÿ8¯¥³»ú.
+T
+java:S1128"8Remove this unused import 'android.app.ActivityManager'.(•è‡`8ª“û.
+	java:S1161"^Rename this field "kilometers_distance" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÕÉËÍùÿÿÿÿ8Á¨Öú.
+g
+java:S1192}"JDefine a constant instead of duplicating this literal "longitude" 3 times.(Ğ¤‹˜8¯¥³»ú.
+
+java:S1186O"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(­íÖ«8¯¥³»ú.
+
+java:S1186^"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÁïÕÒ8¯¥³»ú.
+T
+java:S1135n"2Complete the task associated to this TODO comment.(áÃæùÿÿÿÿ8¯¥³»ú.
+
+java:S11864"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Õş¤l8¯¥³»ú.
+Y	java:S125Ò"<This block of commented-out lines of code should be removed.(ÄíÉ8«‘Şµû.
+u
+java:S3252Œ"WUse static access with "androidx.core.content.ContextCompat" for "checkSelfPermission".(¥êêí8€ÑÏû.
