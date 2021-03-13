@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <RadioGroup
+            android:id="@+id/chooseCityRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <RadioButton
+                android:text="Gomel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gomelRadioButton"/>
+
+        <RadioButton
+                android:text="Minsk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/minskRadioButton"/>
+
+        <RadioButton
+                android:text="Grodno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/grodnoRadioButton"/>
+
+        <RadioButton
+                android:text="Mogilev"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mogilevRadioButton"/>
+
+        <RadioButton
+                android:text="Brest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/brestRadioButton"/>
+        <RadioButton
+                android:text="Vitebsk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/vitebskRadioButton"/>
+    </RadioGroup>
+
+<!--    <Button-->
+<!--            android:text="download data for city"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/download_data_button"-->
+<!--            android:onClick="downloadCoordinates"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+</androidx.constraintlayout.widget.ConstraintLayout>

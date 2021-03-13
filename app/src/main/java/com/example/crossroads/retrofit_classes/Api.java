@@ -11,9 +11,15 @@ public interface Api {
 
 
 
-    @Headers("Content-Type: application/json")
-    @GET("/get_data")
-    Call<JsonObject> getCoordinatesArrayFromServer(
+//    @Headers("Content-Type: application/json")
+//    @GET("/get_data")
+//    Call<JsonObject> getCoordinatesArrayFromServer(
+//    );
+
+
+    @GET("/get_data_by_city")
+    Call<JsonObject> getCoordinatesArrayFromServerByCity(
+            @Query("city") String city
     );
 
 

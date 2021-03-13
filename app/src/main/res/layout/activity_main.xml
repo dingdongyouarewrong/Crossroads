@@ -150,6 +150,13 @@
 
         </LinearLayout>
 
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsButton"
+                android:text="Settings"
+                android:layout_alignParentBottom="true"
+                android:onClick="startSettings"/>
     </LinearLayout>
 
     <Button
@@ -157,7 +164,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_start"
             android:text="Get crossroads for my city"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:onClick="getCoordinatesForCity"/>
 
 
 
