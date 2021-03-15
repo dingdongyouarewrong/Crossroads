@@ -2,16 +2,21 @@ package com.example.crossroads;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import com.example.crossroads.retrofit_classes.Api;
 import com.example.crossroads.service.GoogleService;
 import com.google.gson.JsonObject;
@@ -33,6 +38,10 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
                 vitebskRadioButton;
     RadioButton lastCheckedRadioButton;
     String current_city;
+    private static final String CHANNEL_ID = "Crossroads service channel";
+    NotificationCompat.Builder builder;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +115,36 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
             }
 
         }
+
+        settingUpNotifications();
     }
+
+
+
+    private void settingUpNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
+            channel.setDescription("Уведомления о том, что сервис запущен");
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
+                .setContentTitle("Сервис запущен")
+                .setContentText("Вы рядом с перекрестком")
+                .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_MAX);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -281,9 +319,10 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     public void restartService() {
         stopService(new Intent(this, GoogleService.class));
         Intent startServiceIntent = new Intent(this, GoogleService.class);
-        startService(startServiceIntent);
+        startForegroundService(startServiceIntent);
     }
-    
+
+
 
 
 }

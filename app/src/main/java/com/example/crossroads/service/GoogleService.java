@@ -3,20 +3,20 @@ package com.example.crossroads.service;
 
 import android.Manifest;
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.*;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.*;
 import android.util.Log;
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import com.example.crossroads.MainActivity;
 import com.example.crossroads.R;
 import com.example.crossroads.retrofit_classes.Api;
 import com.google.gson.Gson;
@@ -30,25 +30,24 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 
-public class GoogleService extends JobIntentService implements LocationListener {
 
-    Map<Double, Double> coordinates = new HashMap<>();
+public class GoogleService extends Service implements LocationListener {
 
+    HashMap<Double, Double> coordinates = new HashMap<>();
+    NotificationManagerCompat notificationManager;
     boolean isGPSEnable = false;
     boolean isNetworkEnable = false;
     double latitude, longitude;
     LocationManager locationManager;
-    Location location;
-    private Handler mHandler = new Handler();
-    long timerNotifyInterval = 2000;
     Retrofit retrofit;
     Api api;
     String city;
     int timeBetweenNotifications = 300000;
     double critical_distance = 0.0003;
-    public static String strReceiver = "crossroads.service.receiver";
+    public String actionName = "SendCoordinatesToActivity";
     Intent intent;
-    double currentDistance, kilometersDistance = 0;
+    Bundle bundle;
+    double currentDistance = 0;
     boolean danger = false;
     private static String CHANNEL_ID = "Crossroads channel";
     long previousNotificationTime;
@@ -63,10 +62,6 @@ public class GoogleService extends JobIntentService implements LocationListener 
         return null;
     }
 
-    @Override
-    protected void onHandleWork(@NonNull @org.jetbrains.annotations.NotNull Intent intent) {
-
-    }
 
 
     @Override
@@ -82,14 +77,11 @@ public class GoogleService extends JobIntentService implements LocationListener 
 
 
         api = retrofit.create(Api.class);
-//        Timer mTimer = new Timer();
-//        TimerTaskToGetLocation timerTask = new TimerTaskToGetLocation();
-//
-//        mTimer.schedule(timerTask, 5, timerNotifyInterval);
-        intent = new Intent(strReceiver);
+
+        intent = new Intent(actionName);
+        bundle = new Bundle();
         city = getCurrentCity();
         coordinates = getCoordinates(city);
-//        getLocation();
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -99,26 +91,39 @@ public class GoogleService extends JobIntentService implements LocationListener 
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, this);
-//
-
+        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent notificationIntent = PendingIntent.getActivity(getApplicationContext(),0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new NotificationCompat.Builder(this, "Crossroads channel")
+                .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
+                .setContentTitle("Сервис работает")
+                .setContentIntent(notificationIntent)
+                .build();
+        startForeground(1, notification);
     }
 
     private void settingUpNotifications() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
             channel.setDescription("Уведомления о том, что вы рядом с перекрестком");
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
+            channel.setVibrationPattern(new long[]{500, 400});
+            channel.enableVibration(false);
+            channel.enableLights(true);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
                 .setContentTitle("Осторожно!")
                 .setContentText("Вы рядом с перекрестком")
+                .setVibrate(new long[]{500, 400})
+                .setSound(alarmSound)
                 .setPriority(NotificationCompat.PRIORITY_MAX);
+
     }
 
     public String getCurrentCity() {
@@ -141,21 +146,21 @@ public class GoogleService extends JobIntentService implements LocationListener 
                 }
 
             }
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    fnUpdate(location);
-                }
-            });
+            updateActivity(location);
 
 
         }
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    private void updateActivity(Location location) {
+        bundle.putDouble("latitude", location.getLatitude());
+        bundle.putDouble("longitude", location.getLongitude());
+        bundle.putSerializable("coordinates",coordinates);
+        intent.putExtras(bundle);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
     }
+
 
     @Override
     public void onProviderEnabled(String provider) {
@@ -168,7 +173,7 @@ public class GoogleService extends JobIntentService implements LocationListener 
     }
 
 
-    private Map<Double, Double> getCoordinates(String city) {
+    private HashMap<Double, Double> getCoordinates(String city) {
         SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
         Type mapType = new TypeToken<Map<Double, Double >>(){}.getType();
         String jsonCoordinates = sharedPreferences.getString(city,"{0.1:0.1}");
@@ -178,50 +183,22 @@ public class GoogleService extends JobIntentService implements LocationListener 
         return null;
     }
 
-    private void fnUpdate(Location location){
-
-        intent.putExtra("latitude",location.getLatitude());
-        intent.putExtra("longitude",location.getLongitude());
-        intent.putExtra("distance", kilometersDistance);
-        intent.putExtra("danger",danger);
-        sendBroadcast(intent);
-    }
-
     private boolean isDanger(double latitude, double longitude) {
-        ArrayList<Double> distances = new ArrayList<>();
         for (Map.Entry<Double, Double> entry : coordinates.entrySet()) {
             getDistance(latitude, longitude, entry.getValue(), entry.getKey());
-            distances.add(currentDistance);
-            kilometersDistance = degreeToKilometers(latitude, longitude,entry.getValue(), entry.getKey());
             if (currentDistance <critical_distance) {
                 Log.i("return", "true");
-                Log.i("minimal", String.valueOf(Collections.min(distances)));
                 checkTimeAndNotify();
                 return true;
 
             }
 
         }
-        Log.i("miminimal distance is", String.valueOf(distances.indexOf(Collections.min(distances))));
-        kilometersDistance = currentDistance;
         return false;
     }
 
     private void getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
         currentDistance = Math.hypot(latitude1-latitude2, longitude1-longitude2);
-    }
-
-
-    private double degreeToKilometers(double lat1, double lon1, double lat2, double lon2) {
-        final int R = 6371;
-        // Radious of the earth
-        double latDistance = toRad(lat2-lat1);
-        double lonDistance = toRad(lon2-lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                        Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
     }
 
     private void checkTimeAndNotify() {
@@ -233,21 +210,22 @@ public class GoogleService extends JobIntentService implements LocationListener 
     }
 
     private void dangerNotify() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        notificationManager = NotificationManagerCompat.from(this);
         Log.i("Notification","NOW");
-        notificationManager.notify(1, builder.build());
+        notificationManager.notify(2, builder.build());
 
 
 
-    }
-
-    private static Double toRad(Double value) {
-        return value * Math.PI / 180;
     }
 
     @Override
     public void onDestroy() {
         Log.d("SERVICE", "onDestroy");
+        notificationManager.cancel(1);
+        notificationManager.cancel(2);
         locationManager.removeUpdates(this);
     }
 }

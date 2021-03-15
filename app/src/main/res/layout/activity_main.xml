@@ -3,22 +3,18 @@
                 android:background="#ffffff"
                 android:layout_height="match_parent">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#3F51B5"
-            android:text="Location using service"
-            android:textColor="#ffffff"
-            android:textSize="20dp"
-            android:gravity="center"/>
+    <org.osmdroid.views.MapView
+            android:id="@+id/map_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-
-            android:orientation="vertical">
-
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-683dp">
 
 
         <LinearLayout
@@ -34,6 +30,7 @@
                     android:layout_marginLeft="10dp"
                     android:textColor="#000000"
                     android:textSize="20dp"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,6 +57,7 @@
                     android:layout_marginLeft="10dp"
                     android:textColor="#000000"
                     android:textSize="20dp"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,6 +84,7 @@
                     android:layout_marginLeft="10dp"
                     android:textColor="#000000"
                     android:textSize="20dp"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -112,6 +111,7 @@
                     android:layout_marginLeft="10dp"
                     android:textColor="#000000"
                     android:textSize="20dp"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,6 +124,7 @@
 
 
         </LinearLayout>
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
@@ -137,6 +138,7 @@
                     android:layout_marginLeft="10dp"
                     android:textColor="#000000"
                     android:textSize="20dp"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,23 +152,26 @@
 
         </LinearLayout>
 
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/settingsButton"
-                android:text="Settings"
-                android:layout_alignParentBottom="true"
-                android:onClick="startSettings"/>
     </LinearLayout>
 
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_start"
-            android:text="Get crossroads for my city"
+            android:id="@+id/settingsButton"
+            android:text="Settings"
             android:layout_alignParentBottom="true"
-            android:onClick="getCoordinatesForCity"/>
+            android:onClick="startSettings"
+            android:visibility="visible"/>
 
+    <TextView
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#3F51B5"
+            android:text="Location using service"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:gravity="center"/>
 
 
 </RelativeLayout>
