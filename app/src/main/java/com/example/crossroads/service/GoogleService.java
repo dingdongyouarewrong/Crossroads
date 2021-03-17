@@ -8,11 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.*;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.*;
 import android.util.Log;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -85,9 +85,7 @@ public class GoogleService extends Service implements LocationListener {
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, this);
@@ -111,7 +109,7 @@ public class GoogleService extends Service implements LocationListener {
             channel.setVibrationPattern(new long[]{500, 400});
             channel.enableVibration(false);
             channel.enableLights(true);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager = NotificationManagerCompat.from(this);
             notificationManager.createNotificationChannel(channel);
         }
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -156,6 +154,7 @@ public class GoogleService extends Service implements LocationListener {
         bundle.putDouble("latitude", location.getLatitude());
         bundle.putDouble("longitude", location.getLongitude());
         bundle.putSerializable("coordinates",coordinates);
+        bundle.putBoolean("danger", danger);
         intent.putExtras(bundle);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
@@ -211,8 +210,12 @@ public class GoogleService extends Service implements LocationListener {
 
     private void dangerNotify() {
         Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 500 milliseconds
-        v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+        // Vibrate for 2000 milliseconds
+        v.vibrate(VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE));
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
+        r.play();
         notificationManager = NotificationManagerCompat.from(this);
         Log.i("Notification","NOW");
         notificationManager.notify(2, builder.build());

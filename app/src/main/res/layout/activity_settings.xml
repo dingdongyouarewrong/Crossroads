@@ -46,7 +46,15 @@
                 android:id="@+id/vitebskRadioButton"/>
     </RadioGroup>
 
-<!--    <Button-->
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stopServiceButton"
+            android:onClick="stopService"
+            tools:text="stop service"
+            app:layout_constraintTop_toBottomOf="@+id/chooseCityRadioGroup"/>
+
+    <!--    <Button-->
 <!--            android:text="download data for city"-->
 <!--            android:layout_width="0dp"-->
 <!--            android:layout_height="wrap_content"-->

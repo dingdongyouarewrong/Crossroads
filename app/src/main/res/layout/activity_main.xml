@@ -1,177 +1,73 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:background="#ffffff"
                 android:layout_height="match_parent">
+
+    <com.google.android.material.button.MaterialButton
+
+            android:text="Безопасно"
+            app:strokeColor="#000000"
+            android:textColor="#333535"
+            app:cornerRadius="12dp"
+            android:insetLeft="7dp"
+            android:insetRight="7dp"
+            android:insetBottom="7dp"
+            app:backgroundTint="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notDangerIndicatiorButton"
+            android:layout_alignParentEnd="true"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconTint="@android:color/holo_green_light"
+
+            />
+
+    <com.google.android.material.button.MaterialButton
+            android:visibility="invisible"
+            android:text="Опасно"
+            app:strokeColor="#000000"
+            android:textColor="#333535"
+            app:cornerRadius="12dp"
+            android:insetLeft="7dp"
+            android:insetRight="7dp"
+            android:insetBottom="7dp"
+            app:backgroundTint="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dangerIndicatiorButton"
+            android:layout_alignParentEnd="true"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconTint="@android:color/holo_red_dark"
+
+            />
+
 
     <org.osmdroid.views.MapView
             android:id="@+id/map_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent">
 
-    <LinearLayout
+    </org.osmdroid.views.MapView>
+
+    <com.google.android.material.button.MaterialButton
+
+            app:strokeColor="#000000"
+            app:backgroundTint="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="-683dp">
-
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="50dp">
-
-            <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="Latitude"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/tv_latitude"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="50dp">
-
-            <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="Longitude"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/tv_longitude"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="50dp">
-
-            <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="Distance"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/distanceTextView"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="50dp">
-
-            <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="Danger"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/tv_danger"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="50dp">
-
-            <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:text="Locality"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:id="@+id/tv_locality"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"/>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:id="@+id/settingsButton"
-            android:text="Settings"
+            android:text="Настройки"
+            android:textColor="#333535"
             android:layout_alignParentBottom="true"
             android:onClick="startSettings"
-            android:visibility="visible"/>
+            app:cornerRadius="6dp"
+            android:visibility="visible"
+            android:insetLeft="7dp"
+            android:insetRight="7dp"
+            android:insetBottom="7dp"/>
 
-    <TextView
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#3F51B5"
-            android:text="Location using service"
-            android:textColor="#ffffff"
-            android:textSize="20dp"
-            android:gravity="center"/>
+
 
 
 </RelativeLayout>

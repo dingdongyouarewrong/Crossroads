@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -323,6 +324,8 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     }
 
 
+    public void stopService(View view) {
+        stopService(new Intent(this, GoogleService.class));
 
-
+    }
 }
