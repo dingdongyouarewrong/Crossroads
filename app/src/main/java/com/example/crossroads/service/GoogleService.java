@@ -49,7 +49,6 @@ public class GoogleService extends Service implements LocationListener {
     Bundle bundle;
     double currentDistance = 0;
     boolean danger = false;
-    private static String CHANNEL_ID = "Crossroads channel";
     long previousNotificationTime;
     NotificationCompat.Builder builder;
 
@@ -57,12 +56,26 @@ public class GoogleService extends Service implements LocationListener {
 
     }
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent notificationIntent = PendingIntent.getActivity(getApplicationContext(),0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new NotificationCompat.Builder(this, "Crossroads channel")
+                .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
+                .setContentTitle("Сервис работает")
+                .setContentIntent(notificationIntent)
+                .build();
+        startForeground(1, notification);
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     @Override
     public void onCreate() {
@@ -100,6 +113,7 @@ public class GoogleService extends Service implements LocationListener {
     }
 
     private void settingUpNotifications() {
+        String CHANNEL_ID = "Crossroads channel";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
@@ -125,8 +139,8 @@ public class GoogleService extends Service implements LocationListener {
     }
 
     public String getCurrentCity() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
-        return sharedPreferences.getString("current_city", "Minsk");
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        return sharedPreferences.getString(getString(R.string.currentCityPreferenceName), "minsk");
     }
 
     @Override
@@ -173,7 +187,7 @@ public class GoogleService extends Service implements LocationListener {
 
 
     private HashMap<Double, Double> getCoordinates(String city) {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
         Type mapType = new TypeToken<Map<Double, Double >>(){}.getType();
         String jsonCoordinates = sharedPreferences.getString(city,"{0.1:0.1}");
             if (jsonCoordinates!=null) {

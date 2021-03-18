@@ -10,7 +10,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
-import android.preference.PreferenceManager;
 
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +27,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -68,25 +68,27 @@ public class MainActivity extends Activity {
             updateMapWithCoordinates(latitude, longitude, coordinates);
 
         }
+
+        private void updateMapWithCoordinates(double latitude, double longitude, HashMap<Double, Double> coordinates) {
+            if (mapView !=null && mapController!=null) {
+                currentPoint.setLatitude(latitude);
+                currentPoint.setLongitude(longitude);
+                mapController.setCenter(currentPoint);
+                if (dangerIndicator!=null) {
+                    if (Boolean.TRUE.equals(danger)) {
+                        dangerIndicator.setVisibility(View.VISIBLE);
+                        notDangerIndicator.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        dangerIndicator.setVisibility(View.INVISIBLE);
+                        notDangerIndicator.setVisibility(View.VISIBLE);                }
+                }
+                putCrossroadsOnMap(coordinates);
+            }
+        }
+
     }
 
-    private void updateMapWithCoordinates(double latitude, double longitude, HashMap<Double, Double> coordinates) {
-        if (mapView !=null && mapController!=null) {
-            currentPoint.setLatitude(latitude);
-            currentPoint.setLongitude(longitude);
-            mapController.setCenter(currentPoint);
-            if (dangerIndicator!=null) {
-                if (Boolean.TRUE.equals(danger)) {
-                    dangerIndicator.setVisibility(View.VISIBLE);
-                    notDangerIndicator.setVisibility(View.INVISIBLE);
-                }
-                else {
-                    dangerIndicator.setVisibility(View.INVISIBLE);
-                    notDangerIndicator.setVisibility(View.VISIBLE);                }
-            }
-            putCrossroadsOnMap(coordinates);
-        }
-    }
 
     private void putCrossroadsOnMap(HashMap<Double, Double> coordinates) {
         if (coordinates!=null) {
@@ -141,7 +143,7 @@ public class MainActivity extends Activity {
     }
 
     private void licenseConfirmation() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
         if (!sharedPreferences.getBoolean("license_confirmed", false)) {
             licenseAlerDialog();
         }
@@ -150,7 +152,8 @@ public class MainActivity extends Activity {
 
     private void enableServiceIfNeeded() {
         boolean serviceEnabled = isMyServiceRunning(GoogleService.class);
-        if (!serviceEnabled) {
+
+        if (!serviceEnabled && serviceSetUpToStart()) {
 
             Intent intent = new Intent(this, GoogleService.class);
             startForegroundService(intent);
@@ -158,6 +161,11 @@ public class MainActivity extends Activity {
         } else {
             Toast.makeText(getApplicationContext(), "Сервис запущен", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean serviceSetUpToStart() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        return sharedPreferences.getBoolean("start_service", true);
     }
 
     private void settingUpNotifications() {
@@ -186,10 +194,11 @@ public class MainActivity extends Activity {
         mapView = (MapView) findViewById(R.id.map_view);
         Configuration.getInstance().setUserAgentValue(getPackageName());
         mapView.setMultiTouchControls(false);
-        mapView.setBuiltInZoomControls(false);
+        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        mapView.setMaxZoomLevel(19d);
 
         mapView.setEnabled(false);
-        mapView.setMinZoomLevel(12d);
+        mapView.setMinZoomLevel(19d);
 
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapController = mapView.getController();
@@ -215,7 +224,7 @@ public class MainActivity extends Activity {
     }
 
     private HashMap<Double, Double> getCoordinates(String city) {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
         Type mapType = new TypeToken<Map<Double, Double >>(){}.getType();
         String jsonCoordinates = sharedPreferences.getString(city,"{0.1:0.1}");
         if (jsonCoordinates!=null) {
@@ -225,8 +234,8 @@ public class MainActivity extends Activity {
     }
 
     public String getCurrentCity() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
-        return sharedPreferences.getString("current_city", "Minsk");
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        return sharedPreferences.getString(getString(R.string.currentCityPreferenceName), "Minsk");
     }
 
 
@@ -355,7 +364,7 @@ public class MainActivity extends Activity {
                 .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Toast.makeText(getApplicationContext(), "Соглашение принято", Toast.LENGTH_LONG).show();
-                        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
+                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
                         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
                         prefsEditor.putBoolean("license_confirmed", true);
                         prefsEditor.commit();

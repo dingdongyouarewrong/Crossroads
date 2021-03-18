@@ -1,67 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="15dp">
 
-    <RadioGroup
-            android:id="@+id/chooseCityRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        <RadioButton
-                android:text="Gomel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/gomelRadioButton"/>
-
-        <RadioButton
-                android:text="Minsk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/minskRadioButton"/>
-
-        <RadioButton
-                android:text="Grodno"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/grodnoRadioButton"/>
-
-        <RadioButton
-                android:text="Mogilev"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/mogilevRadioButton"/>
-
-        <RadioButton
-                android:text="Brest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/brestRadioButton"/>
-        <RadioButton
-                android:text="Vitebsk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/vitebskRadioButton"/>
-    </RadioGroup>
-
-    <Button
+    <TextView
+            android:text="Выберите свой город:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/stopServiceButton"
-            android:onClick="stopService"
-            tools:text="stop service"
-            app:layout_constraintTop_toBottomOf="@+id/chooseCityRadioGroup"/>
+            android:id="@+id/textView"
+            />
+
+    <LinearLayout
+            android:id="@+id/chooseCityRadioGroup"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+
+            <RadioButton
+                    android:text="Гомель"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gomelRadioButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:text="Данные не сохранены"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/gomelDataState"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+
+            <RadioButton
+                    android:text="Минск"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/minskRadioButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+            <TextView
+                    android:text="Данные не сохранены"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/minskDataState"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+
+            <RadioButton
+                    android:text="Гродно"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/grodnoRadioButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:text="Данные не сохранены"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/grodnoDataState"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+            <RadioButton
+                    android:text="Могилев"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mogilevRadioButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:text="Данные не сохранены"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mogilevDataState"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+            <RadioButton
+                    android:text="Брест"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/brestRadioButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                    android:text="Данные не сохранены"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/brestDataState"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+            <RadioButton
+                    android:text="Витебск"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/vitebskRadioButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <TextView
+                    android:text="Данные не сохранены"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/vitebskDataState"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+    <Switch
+            android:text="Сервис работает"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/serviceWorksSwitch"
+            android:paddingTop="15dp"/>
 
     <!--    <Button-->
-<!--            android:text="download data for city"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/download_data_button"-->
-<!--            android:onClick="downloadCoordinates"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!--            android:text="download data for city"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:id="@+id/download_data_button"-->
+    <!--            android:onClick="downloadCoordinates"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintHorizontal_bias="0"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+</LinearLayout>

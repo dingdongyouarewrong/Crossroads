@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Crossroads</string>
+    <string name="SharedPreferencesStoreName">Crossroads</string>
+    <string name="currentCityPreferenceName">current_city</string>
 </resources>

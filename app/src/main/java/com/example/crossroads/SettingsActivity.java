@@ -12,12 +12,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import com.example.crossroads.retrofit_classes.Api;
 import com.example.crossroads.service.GoogleService;
 import com.google.gson.JsonObject;
@@ -28,7 +24,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsActivity extends Activity implements CompoundButton.OnCheckedChangeListener {
-    RadioGroup chooseCityRadioGroup;
     Retrofit retrofit;
     Api api;
     RadioButton gomelRadioButton,
@@ -37,78 +32,97 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
                 mogilevRadioButton,
                 brestRadioButton,
                 vitebskRadioButton;
-    RadioButton lastCheckedRadioButton;
-    String current_city;
+    TextView gomelDataDownloadedState,
+            minskDataDownloadedState,
+            grodnoDataDownloadedState,
+            mogilevDataDownloadedState,
+            brestDataDownloadedState,
+            vitebskDataDownloadedState;
+
+    Switch serviceWorksSwitch;
+    String currentCity;
     private static final String CHANNEL_ID = "Crossroads service channel";
     NotificationCompat.Builder builder;
+    private final String[] supportedCities = new String[] {"gomel", "minsk", "grodno", "vitebsk", "mogilev", "brest"};
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        current_city = getCurrentCity();
+        currentCity = getCurrentCity();
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://evening-dusk-59162.herokuapp.com") //Базовая часть адреса
                 .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                 .build();
         api = retrofit.create(Api.class);
 
-        chooseCityRadioGroup = findViewById(R.id.chooseCityRadioGroup);
         gomelRadioButton =  findViewById(R.id.gomelRadioButton);
         gomelRadioButton.setOnCheckedChangeListener(this);
+        gomelDataDownloadedState = findViewById(R.id.gomelDataState);
 
         minskRadioButton =  findViewById(R.id.minskRadioButton);
         minskRadioButton.setOnCheckedChangeListener(this);
+        minskDataDownloadedState = findViewById(R.id.minskDataState);
 
         grodnoRadioButton =  findViewById(R.id.grodnoRadioButton);
         grodnoRadioButton.setOnCheckedChangeListener(this);
+        grodnoDataDownloadedState = findViewById(R.id.grodnoDataState);
 
         mogilevRadioButton =  findViewById(R.id.mogilevRadioButton);
         mogilevRadioButton.setOnCheckedChangeListener(this);
+        mogilevDataDownloadedState = findViewById(R.id.mogilevDataState);
 
         brestRadioButton =  findViewById(R.id.brestRadioButton);
         brestRadioButton.setOnCheckedChangeListener(this);
+        brestDataDownloadedState = findViewById(R.id.brestDataState);
 
         vitebskRadioButton =  findViewById(R.id.vitebskRadioButton);
         vitebskRadioButton.setOnCheckedChangeListener(this);
+        vitebskDataDownloadedState = findViewById(R.id.vitebskDataState);
 
-//        Button downloadCoordinatesButton = findViewById(R.id.download_data_button);
+        serviceWorksSwitch = findViewById(R.id.serviceWorksSwitch);
+        serviceWorksSwitch.setOnCheckedChangeListener(this);
+        setServiceWorksSwitch();
+        toggleCheckboxes();
+        setDataDownloadedTextViews();
+        settingUpNotifications();
+    }
 
-        switch (current_city) {
+    private void setServiceWorksSwitch() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("start_service", true)) {
+            serviceWorksSwitch.setChecked(true);
+        } else {
+            serviceWorksSwitch.setChecked(false);
+        }
+
+    }
+
+    private void toggleCheckboxes() {
+        switch (currentCity) {
             case "gomel": {
                 gomelRadioButton.toggle();
-                lastCheckedRadioButton = gomelRadioButton;
                 break;
             }
             case "minsk": {
                 minskRadioButton.toggle();
-                lastCheckedRadioButton = minskRadioButton;
-
                 break;
             }
             case "grodno": {
                 grodnoRadioButton.toggle();
-                lastCheckedRadioButton = grodnoRadioButton;
-
                 break;
             }
             case "mogilev": {
                 mogilevRadioButton.toggle();
-                lastCheckedRadioButton = mogilevRadioButton;
-
                 break;
             }
             case "brest": {
                 brestRadioButton.toggle();
-                lastCheckedRadioButton = brestRadioButton;
-
                 break;
             }
             case "vitebsk": {
                 vitebskRadioButton.toggle();
-                lastCheckedRadioButton = vitebskRadioButton;
-
                 break;
             }
             default: {
@@ -117,8 +131,55 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
 
         }
 
-        settingUpNotifications();
     }
+
+    private void setDataDownloadedTextViews() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        String coord;
+        for (String city:supportedCities) {
+            coord = sharedPreferences.getString(city,null);
+
+            switch (city) {
+                case "gomel": {
+                    setDownloadedTextStatus(coord!=null, gomelDataDownloadedState);
+                    break;
+                }
+                case "minsk": {
+                    setDownloadedTextStatus(coord!=null, minskDataDownloadedState);
+                    break;
+                }
+                case "grodno": {
+                    setDownloadedTextStatus(coord!=null, grodnoDataDownloadedState);
+                    break;
+                }
+                case "mogilev": {
+                    setDownloadedTextStatus(coord!=null, mogilevDataDownloadedState);
+                    break;
+                }
+                case "brest": {
+                    setDownloadedTextStatus(coord!=null, brestDataDownloadedState);
+                    break;
+                }
+                case "vitebsk": {
+                    setDownloadedTextStatus(coord!=null, vitebskDataDownloadedState);
+                    break;
+                }
+                default:
+                    Log.e("unexpected","Unexpected value: " + currentCity);
+            }
+
+        }
+    }
+
+    private void setDownloadedTextStatus(boolean dataDownloaded, TextView view) {
+        if (dataDownloaded) {
+            view.setText("Данные сохранены");
+        } else {
+            view.setText("Данные не сохранены");
+        }
+    }
+
+
 
 
 
@@ -233,12 +294,25 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
 
                 break;
             }
+            case R.id.serviceWorksSwitch: {
+                SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                        getString(R.string.SharedPreferencesStoreName), Context.MODE_PRIVATE);
+                SharedPreferences.Editor prefsEditor = prefs.edit();
+                if (isChecked) {
+                    prefsEditor.putBoolean(getString(R.string.currentCityPreferenceName), true);
+                } else {
+                    prefsEditor.putBoolean(getString(R.string.currentCityPreferenceName), false);
+                    stopService();
+                }
+                prefsEditor.commit();
+
+            }
         }
 
     }
 
     private void downloadCoordinatesIfNecessary(String city) {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
         String coord = sharedPreferences.getString(city,null);
         setCurrentCity(city);
 
@@ -252,17 +326,17 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     }
 
     private void setCurrentCity( String city) {
-        current_city = city;
+        currentCity = city;
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-                "Crossroads", Context.MODE_PRIVATE);
+                getString(R.string.SharedPreferencesStoreName), Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString("current_city", city);
+        prefsEditor.putString(getString(R.string.currentCityPreferenceName), city);
         prefsEditor.commit();
     }
 
     public String getCurrentCity() {
-        SharedPreferences sharedPreferences = getSharedPreferences("Crossroads", MODE_PRIVATE);
-        return sharedPreferences.getString("current_city", "not found");
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        return sharedPreferences.getString(getString(R.string.currentCityPreferenceName), "not found");
     }
 
     public void downloadDataDialog() {
@@ -283,7 +357,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     public void downloadCoordinates() {
         Toast.makeText(getApplicationContext(), "Cкачиваю данные", Toast.LENGTH_SHORT).show();
 
-        Call<JsonObject> call = api.getCoordinatesArrayFromServerByCity(current_city);
+        Call<JsonObject> call = api.getCoordinatesArrayFromServerByCity(currentCity);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -307,12 +381,13 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
 
     private void saveCordinates(String json) {
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-                "Crossroads", Context.MODE_PRIVATE);
+                getString(R.string.SharedPreferencesStoreName), Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString(current_city, json);
-        prefsEditor.putString("current_city",current_city);
+        prefsEditor.putString(currentCity, json);
+        prefsEditor.putString(getString(R.string.currentCityPreferenceName), currentCity);
         prefsEditor.commit();
         Toast.makeText(this, "Данные сохранены", Toast.LENGTH_SHORT).show();
+        setDataDownloadedTextViews();
         restartService();
 
     }
@@ -324,8 +399,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     }
 
 
-    public void stopService(View view) {
+    public void stopService() {
         stopService(new Intent(this, GoogleService.class));
-
     }
 }
