@@ -1,9 +1,6 @@
 package com.example.crossroads;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.*;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import com.example.crossroads.retrofit_classes.Api;
 import com.example.crossroads.service.GoogleService;
 import com.google.gson.JsonObject;
@@ -44,7 +41,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     private static final String CHANNEL_ID = "Crossroads service channel";
     NotificationCompat.Builder builder;
     private final String[] supportedCities = new String[] {"gomel", "minsk", "grodno", "vitebsk", "mogilev", "brest"};
-
+    NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +84,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         toggleCheckboxes();
         setDataDownloadedTextViews();
         settingUpNotifications();
+
     }
 
     private void setServiceWorksSwitch() {
@@ -190,12 +188,14 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
             channel.setDescription("Уведомления о том, что сервис запущен");
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager = NotificationManagerCompat.from(this);
             notificationManager.createNotificationChannel(channel);
         }
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_layout);
 
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
+                .setContent(remoteViews)
                 .setContentTitle("Сервис запущен")
                 .setContentText("Вы рядом с перекрестком")
                 .setOngoing(true)
@@ -299,9 +299,13 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
                         getString(R.string.SharedPreferencesStoreName), Context.MODE_PRIVATE);
                 SharedPreferences.Editor prefsEditor = prefs.edit();
                 if (isChecked) {
-                    prefsEditor.putBoolean(getString(R.string.currentCityPreferenceName), true);
+                    prefsEditor.putBoolean("start_service", true);
+                    if (!isMyServiceRunning(GoogleService.class)) {
+                        Intent intent = new Intent(this, GoogleService.class);
+                        startForegroundService(intent);
+                    }
                 } else {
-                    prefsEditor.putBoolean(getString(R.string.currentCityPreferenceName), false);
+                    prefsEditor.putBoolean("start_service", false);
                     stopService();
                 }
                 prefsEditor.commit();
@@ -309,6 +313,16 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
             }
         }
 
+    }
+
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void downloadCoordinatesIfNecessary(String city) {

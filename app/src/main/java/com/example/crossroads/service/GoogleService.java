@@ -13,6 +13,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.*;
 import android.util.Log;
+import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -42,7 +43,7 @@ public class GoogleService extends Service implements LocationListener {
     Retrofit retrofit;
     Api api;
     String city;
-    int timeBetweenNotifications = 300000;
+    int timeBetweenNotifications = 180000;
     double critical_distance = 0.0003;
     public String actionName = "SendCoordinatesToActivity";
     Intent intent;
@@ -101,7 +102,7 @@ public class GoogleService extends Service implements LocationListener {
         if (androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 1, this);
         Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent notificationIntent = PendingIntent.getActivity(getApplicationContext(),0, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new NotificationCompat.Builder(this, "Crossroads channel")
@@ -114,6 +115,7 @@ public class GoogleService extends Service implements LocationListener {
 
     private void settingUpNotifications() {
         String CHANNEL_ID = "Crossroads channel";
+        RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.notification_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
@@ -134,6 +136,7 @@ public class GoogleService extends Service implements LocationListener {
                 .setContentText("Вы рядом с перекрестком")
                 .setVibrate(new long[]{500, 400})
                 .setSound(alarmSound)
+                .setContent(notificationLayout)
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
     }
