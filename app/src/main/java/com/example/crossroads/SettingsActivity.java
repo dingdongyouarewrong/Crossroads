@@ -315,6 +315,11 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
 
     }
 
+    private boolean serviceSetUpToStart() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+        return sharedPreferences.getBoolean("start_service", true);
+    }
+
     public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -333,7 +338,10 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         if (coord == null) {
             downloadDataDialog();
         } else {
-            restartService();
+            if  (serviceSetUpToStart()) {
+                restartService();
+            }
+
         }
 
 
