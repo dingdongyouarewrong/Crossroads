@@ -202,7 +202,7 @@ public class GoogleService extends Service implements LocationListener {
     private boolean isDanger(double latitude, double longitude) {
         for (Map.Entry<Double, Double> entry : coordinates.entrySet()) {
             getDistance(latitude, longitude, entry.getValue(), entry.getKey());
-            if (currentDistance <critical_distance) {
+            if (currentDistance < critical_distance) {
                 Log.i("return", "true");
                 checkTimeAndNotify();
                 return true;
@@ -213,7 +213,8 @@ public class GoogleService extends Service implements LocationListener {
         return false;
     }
 
-    private void getDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
+    private void getDistance(double latitude1, double longitude1,
+                             double latitude2, double longitude2) {
         currentDistance = Math.hypot(latitude1-latitude2, longitude1-longitude2);
     }
 
@@ -227,8 +228,8 @@ public class GoogleService extends Service implements LocationListener {
 
     private void dangerNotify() {
         Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        // Vibrate for 2000 milliseconds
-        v.vibrate(VibrationEffect.createOneShot(2000, VibrationEffect.DEFAULT_AMPLITUDE));
+        // Vibrate for 5000 milliseconds
+        v.vibrate(VibrationEffect.createOneShot(5000, VibrationEffect.DEFAULT_AMPLITUDE));
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);

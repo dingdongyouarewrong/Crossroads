@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.*;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -423,5 +424,25 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
 
     public void stopService() {
         stopService(new Intent(this, GoogleService.class));
+    }
+
+
+    Integer maxclicks = 10; Integer currentnumber = 0;
+    public void easterEggClick(View view) {
+        if (view.getId()==R.id.easterEggImage) {
+            ImageView egg = findViewById(R.id.easterEggImage);
+            egg.setVisibility(View.GONE);
+        }
+        else {
+            if (currentnumber.equals(maxclicks)) {
+                ImageView egg = findViewById(R.id.easterEggImage);
+                egg.setVisibility(View.VISIBLE);
+                Log.i("EGG", "EGG");
+            } else {
+                currentnumber = currentnumber + 1;
+                Log.i("monke number", String.valueOf(currentnumber));
+            }
+        }
+
     }
 }
