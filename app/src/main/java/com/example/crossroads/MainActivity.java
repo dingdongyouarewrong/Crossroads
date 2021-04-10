@@ -1,6 +1,7 @@
 package com.example.crossroads;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Build;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -38,6 +40,8 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -125,6 +129,7 @@ public class MainActivity extends Activity {
 
         }
 
+        readMIUIersion();
 
         setContentView(R.layout.activity_main);
         licenseConfirmation();
@@ -192,7 +197,8 @@ public class MainActivity extends Activity {
         mapView = findViewById(R.id.map_view);
         Configuration.getInstance().setUserAgentValue(getPackageName());
         mapView.setMultiTouchControls(false);
-        mapView.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        mapView.getZoomController().setVisibility(CustomZoomButtonsController
+                .Visibility.NEVER);
         mapView.setMaxZoomLevel(19d);
 
         mapView.setEnabled(false);
@@ -376,11 +382,12 @@ public class MainActivity extends Activity {
                         "Для Пользователей младше 12 лет, настройки работы приложения производить со стороны Пользователя старше 18 лет.\n")
                 .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext(), "Соглашение принято", Toast.LENGTH_LONG).show();
-                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
-                        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-                        prefsEditor.putBoolean("license_confirmed", true);
-                        prefsEditor.commit();
+//                        Toast.makeText(getApplicationContext(), "Соглашение принято", Toast.LENGTH_LONG).show();
+//                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+//                        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+//                        prefsEditor.putBoolean("license_confirmed", true);
+//                        prefsEditor.commit();
+                        readMIUIersion();
                     }
                 })
                 .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
@@ -395,6 +402,43 @@ public class MainActivity extends Activity {
                 .setCancelable(false)
                 .create()
                 .show();
+    }
+
+    private void readMIUIersion() {
+        try {
+            @SuppressLint("PrivateApi") final Class<?> propertyClass = Class.forName("android.os.SystemProperties");
+            final Method method = propertyClass.getMethod("get", String.class);
+            final String versionCode = (String) method.invoke(propertyClass, "ro.miui.ui.version.code");
+            final String versionName = (String) method.invoke(propertyClass, "ro.miui.ui.version.name");
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder
+                        .setTitle("Выполните действия перед началом работы")
+                        .setMessage("Ваша система - MIUI 12 \n" +
+                                "Для корректной работы приложения нужно попросить телефон не выключать его \n" +
+                                "1. Ненадолго зажмите иконку приложения на экране \n" +
+                                "2. Нажмите «О приложении» \n" +
+                                "3. Выберите «Контроль активности» \n" +
+                                "4. Выберите «Нет ограничений»")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getApplicationContext(), "Соглашение принято", Toast.LENGTH_LONG).show();
+                                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
+                                SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+                                prefsEditor.putBoolean("license_confirmed", true);
+                                prefsEditor.commit();
+                            }
+                        })
+                        .setView(findViewById(R.layout.activity_main))
+
+                        .setCancelable(false)
+                        .create()
+                        .show();
+
+            Log.d("MIUI", "Version Code: " + versionCode);
+            Log.d("MIUI", "Version Name: " + versionName);
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
 

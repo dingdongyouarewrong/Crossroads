@@ -440,7 +440,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
                 Log.i("EGG", "EGG");
             } else {
                 currentnumber = currentnumber + 1;
-                Log.i("monke number", String.valueOf(currentnumber));
+                Log.i("ic_additional_launcher number", String.valueOf(currentnumber));
             }
         }
 

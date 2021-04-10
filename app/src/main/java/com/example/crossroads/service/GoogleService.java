@@ -1,6 +1,6 @@
 package com.example.crossroads.service;
 
-
+import java.util.Calendar;
 import android.Manifest;
 import android.app.*;
 import android.content.Context;
@@ -113,33 +113,6 @@ public class GoogleService extends Service implements LocationListener {
         startForeground(1, notification);
     }
 
-    private void settingUpNotifications() {
-        String CHANNEL_ID = "Crossroads channel";
-        RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.notification_layout);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
-            channel.setDescription("Уведомления о том, что вы рядом с перекрестком");
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            channel.setVibrationPattern(new long[]{500, 400});
-            channel.enableVibration(false);
-            channel.enableLights(true);
-            notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.createNotificationChannel(channel);
-        }
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
-                .setContentTitle("Осторожно!")
-                .setContentText("Вы рядом с перекрестком")
-                .setVibrate(new long[]{500, 400})
-                .setSound(alarmSound)
-                .setContent(notificationLayout)
-                .setPriority(NotificationCompat.PRIORITY_MAX);
-
-    }
 
     public String getCurrentCity() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
@@ -200,6 +173,7 @@ public class GoogleService extends Service implements LocationListener {
     }
 
     private boolean isDanger(double latitude, double longitude) {
+
         for (Map.Entry<Double, Double> entry : coordinates.entrySet()) {
             getDistance(latitude, longitude, entry.getValue(), entry.getKey());
             if (currentDistance < critical_distance) {
@@ -226,6 +200,34 @@ public class GoogleService extends Service implements LocationListener {
         }
     }
 
+    private void settingUpNotifications() {
+        String CHANNEL_ID = "Crossroads channel";
+        RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
+            channel.setDescription("Уведомления о том, что вы рядом с перекрестком");
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            channel.setVibrationPattern(new long[]{500, 400});
+            channel.enableVibration(false);
+            channel.enableLights(true);
+            notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.createNotificationChannel(channel);
+        }
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.cast_ic_expanded_controller_stop)
+                .setContentTitle("Осторожно!")
+                .setContentText("Вы рядом с перекрестком")
+                .setVibrate(new long[]{500, 400})
+                .setSound(alarmSound)
+                .setContent(notificationLayout)
+                .setPriority(NotificationCompat.PRIORITY_MAX);
+    }
+
+
     private void dangerNotify() {
         Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         // Vibrate for 5000 milliseconds
@@ -237,9 +239,6 @@ public class GoogleService extends Service implements LocationListener {
         notificationManager = NotificationManagerCompat.from(this);
         Log.i("Notification","NOW");
         notificationManager.notify(2, builder.build());
-
-
-
     }
 
     @Override

@@ -206,7 +206,7 @@
             android:id="@+id/linearLayout2">
 
         <TextView
-                android:text="ГГУ им. Ф. Скорины, 2021"
+                android:text="ГГУ им. Ф. Скорины, 2021\nФакультет физики и ИТ"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_name"
@@ -223,7 +223,7 @@
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/monke"
+            app:srcCompat="@drawable/ic_additional_launcher"
             android:id="@+id/easterEggImage"
             android:layout_margin="20dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -231,7 +231,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="gone"
-            android:background="@drawable/monke"
+            android:background="@drawable/ic_additional_launcher"
             android:onClick="easterEggClick"/>
 
 

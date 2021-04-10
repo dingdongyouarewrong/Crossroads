@@ -63,9 +63,9 @@
             android:onClick="startSettings"
             app:cornerRadius="6dp"
             android:visibility="visible"
-            android:insetLeft="7dp"
-            android:insetRight="7dp"
-            android:insetBottom="7dp"/>
+            android:insetLeft="10dp"
+            android:insetRight="10dp"
+            android:insetBottom="10dp"/>
 
 
 
