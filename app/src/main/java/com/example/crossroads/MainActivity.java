@@ -129,7 +129,6 @@ public class MainActivity extends Activity {
 
         }
 
-        readMIUIersion();
 
         setContentView(R.layout.activity_main);
         licenseConfirmation();
