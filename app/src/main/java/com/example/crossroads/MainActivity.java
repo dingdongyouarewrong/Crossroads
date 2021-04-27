@@ -1,7 +1,6 @@
 package com.example.crossroads;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -13,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Build;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -40,8 +38,6 @@ import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -161,7 +157,6 @@ public class MainActivity extends Activity {
 
             Intent intent = new Intent(this, GoogleService.class);
             startForegroundService(intent);
-            Toast.makeText(getApplicationContext(), "Сервис запущен", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -322,71 +317,11 @@ public class MainActivity extends Activity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder
-                .setTitle("Принять лицензионное соглашение")
-                .setMessage("Перед использованием программы, пожалуйста, ознакомьтесь с условиями нижеследующего программы означает полное и безоговорочное принятие Вами условий настоящего соглашения, что подтверждается нажатием на кнопку «Принимаю».\n" +
-                        "Любое использование Вами программы означает полное и безоговорочное принятие Вами условий настоящего соглашения, что подтверждается нажатием на кнопку «Принимаю».\n" +
-                        "\n" +
-                        "Если Вы не принимаете условия пользовательского соглашения в полном объёме, Вы не имеете права использовать программу в каких-либо целях, программа не будет работать на Вашем устройстве.\n" +
-                        "\n" +
-                        "1. Условия использования.\n" +
-                        "\n" +
-                        "1.1. Используя Программу\n" +
-                        "\n" +
-                        "Пользователь выражает свое полное и безоговорочное согласие со всеми условиями Соглашения.\n" +
-                        "\n" +
-                        "1.2. Использование Программы на условиях настоящего Соглашения в личных некоммерческих целях осуществляется безвозмездно.\n" +
-                        "\n" +
-                        "2. Право на Программу.\n" +
-                        "\n" +
-                        "2.1. Исключительное право на программу принадлежит разработчикам Программы (см. www.gsu.by ).\n" +
-                        "\n" +
-                        "2.2 Пользователь не имеет право\n" +
-                        "\n" +
-                        "2.2. Пользователь не имеет право воспроизводить и распространять Программу в коммерческих целях (за плату), без письменного согласия разработчиков Программы.\n" +
-                        "\n" +
-                        "3. Ответственность по использованию.\n" +
-                        "\n" +
-                        "3.1. Программа предоставляется на условиях «как есть». Разработчики не предоставляют никаких гарантий в отношении безошибочной и бесперебойной работы Программы конкретным целям Пользователя, не гарантирует достоверность, точность, полноту и своевременность «Данных», а так же не предоставляет никаких иных гарантий, прямо не указанных в Соглашении.\n" +
-                        "\n" +
-                        "3.2. Разработчики не несут никакой ответственности, за какие-либо прямые или косвенные последствия использования или невозможности использования Программы (включая «Данные») и/или ущерб, причиненный Пользователю и/или третьим сторонам в результате какого-либо использования или неиспользования Программы (включая Данные) или отдельные её функции, в том числе из- за возможных ошибок или сбоев в них.\n" +
-                        "\n" +
-                        "4. Разрешение на использование личных данных.\n" +
-                        "\n" +
-                        "4.1. Использование приложения \"Перекрестки\" означает принятие согласия на обработку и передачу данных (путем установки соответствующего флажка в меню настроек) об ip-адресе устройства (Пользователя), никаких иных данных Приложение не собирает.\n" +
-                        "\n" +
-                        "4.2. Обработка и передача данных между устройством и сервером выполняются по зашифрованному каналу (протокол HTTPS). \n" +
-                        "\n" +
-                        "5. Назначение Программы. Приложение \"Перекрестки\" предназначено для напоминания, что перекрестки дорог – зона повышенной опасности. \n" +
-                        "\n" +
-                        "6. Условия определения геолокации.\n" +
-                        "\n" +
-                        "6.1. Программа использует базу данных координат основных железнодорожных путей общего пользования из открытых источников сети интернет.\n" +
-                        "\n" +
-                        "6.2. Пользователь должен учитывать:\n" +
-                        "\n" +
-                        "6.2.1. Точность определения координат и оповещения зависит от корректной работы геолокации на устройстве Пользователя и не зависит от бесперебойной работы программы.\n" +
-                        "\n" +
-                        "6.2.2. Точное определение координат зависит от модели устройства Пользователя, модели чипа GPS/ГЛОНАСС в устройстве Пользователя, неравномерностью прохождения сигнала до спутника и обратно.\n" +
-                        "\n" +
-                        "6.2.3. На параметр определения координат оказывается стороннее влияние:\n" +
-                        " - наличие препятствий в зоне прямой видимости (дома, плотная городская застройка, деревья и прочие объекты достаточной высоты);\n" +
-                        "- помехи в ионо- и тропосфере;\n" +
-                        "- работа режима экономии энергии на Устройстве;\n" +
-                        "- неблагоприятные погодные условия\n" +
-                        "и прочие условия;\n" +
-                        "\n" +
-                        "7. Возрастные ограничения.\n" +
-                        "\n" +
-                        "Возрастные ограничения для использования приложения отсутствуют.\n" +
-                        "Для Пользователей младше 12 лет, настройки работы приложения производить со стороны Пользователя старше 18 лет.\n")
+                .setTitle(R.string.alert_title)
+                .setMessage(R.string.license)
                 .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-//                        Toast.makeText(getApplicationContext(), "Соглашение принято", Toast.LENGTH_LONG).show();
-//                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.SharedPreferencesStoreName), MODE_PRIVATE);
-//                        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-//                        prefsEditor.putBoolean("license_confirmed", true);
-//                        prefsEditor.commit();
-                        readMIUIersion();
+                        disableBatteryRestrictionsDialog();
                     }
                 })
                 .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
@@ -403,17 +338,10 @@ public class MainActivity extends Activity {
                 .show();
     }
 
-    private void readMIUIersion() {
-        try {
-            @SuppressLint("PrivateApi") final Class<?> propertyClass = Class.forName("android.os.SystemProperties");
-            final Method method = propertyClass.getMethod("get", String.class);
-            final String versionCode = (String) method.invoke(propertyClass, "ro.miui.ui.version.code");
-            final String versionName = (String) method.invoke(propertyClass, "ro.miui.ui.version.name");
+    private void disableBatteryRestrictionsDialog() {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder
-                        .setTitle("Выполните действия перед началом работы")
-                        .setMessage("Ваша система - MIUI 12 \n" +
-                                "Для корректной работы приложения нужно попросить телефон не выключать его \n" +
+                builder.setTitle("Выполните действия перед началом работы")
+                        .setMessage("Для корректной работы приложения нужно попросить телефон не выключать его: \n" +
                                 "1. Ненадолго зажмите иконку приложения на экране \n" +
                                 "2. Нажмите «О приложении» \n" +
                                 "3. Выберите «Контроль активности» \n" +
@@ -428,16 +356,11 @@ public class MainActivity extends Activity {
                             }
                         })
                         .setView(findViewById(R.layout.activity_main))
-
                         .setCancelable(false)
                         .create()
                         .show();
 
-            Log.d("MIUI", "Version Code: " + versionCode);
-            Log.d("MIUI", "Version Name: " + versionName);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
     }
 
 
