@@ -1,4 +1,4 @@
-package com.example.crossroads;
+package com.gsu.crossroads;
 
 import android.app.*;
 import android.content.Context;
@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.*;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import com.example.crossroads.retrofit_classes.Api;
-import com.example.crossroads.service.GoogleService;
+import com.gsu.crossroads.retrofit_classes.Api;
+import com.gsu.crossroads.service.GoogleService;
 import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;

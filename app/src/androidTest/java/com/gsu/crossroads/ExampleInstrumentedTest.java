@@ -1,4 +1,4 @@
-package com.example.crossroads;
+package com.gsu.crossroads;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;

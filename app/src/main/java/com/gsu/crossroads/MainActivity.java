@@ -1,4 +1,4 @@
-package com.example.crossroads;
+package com.gsu.crossroads;
 
 import android.Manifest;
 import android.app.*;
@@ -18,8 +18,8 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import com.example.crossroads.retrofit_classes.Api;
-import com.example.crossroads.service.GoogleService;
+import com.gsu.crossroads.retrofit_classes.Api;
+import com.gsu.crossroads.service.GoogleService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.osmdroid.api.IGeoPoint;

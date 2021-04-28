@@ -1,6 +1,5 @@
-package com.example.crossroads.service;
+package com.gsu.crossroads.service;
 
-import java.util.Calendar;
 import android.Manifest;
 import android.app.*;
 import android.content.Context;
@@ -17,9 +16,9 @@ import android.widget.RemoteViews;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import com.example.crossroads.MainActivity;
-import com.example.crossroads.R;
-import com.example.crossroads.retrofit_classes.Api;
+import com.gsu.crossroads.MainActivity;
+import com.gsu.crossroads.R;
+import com.gsu.crossroads.retrofit_classes.Api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

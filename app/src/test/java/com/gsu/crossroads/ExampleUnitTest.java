@@ -1,4 +1,4 @@
-package com.example.crossroads;
+package com.gsu.crossroads;
 
 import org.junit.Test;
 

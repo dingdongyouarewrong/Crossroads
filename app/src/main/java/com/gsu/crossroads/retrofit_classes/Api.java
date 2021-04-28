@@ -1,4 +1,4 @@
-package com.example.crossroads.retrofit_classes;
+package com.gsu.crossroads.retrofit_classes;
 
 import com.google.gson.JsonObject;
 import retrofit2.Call;
