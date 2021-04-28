@@ -43,6 +43,7 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
     NotificationCompat.Builder builder;
     private final String[] supportedCities = new String[] {"gomel", "minsk", "grodno", "vitebsk", "mogilev", "brest"};
     NotificationManagerCompat notificationManager;
+    private boolean isItFirstLaunch = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -339,10 +340,10 @@ public class SettingsActivity extends Activity implements CompoundButton.OnCheck
         if (coord == null) {
             downloadDataDialog();
         } else {
-            if  (serviceSetUpToStart()) {
+            if  (serviceSetUpToStart() && !isItFirstLaunch) {
                 restartService();
             }
-
+            isItFirstLaunch = false;
         }
 
 
