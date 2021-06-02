@@ -9,9 +9,12 @@ import android.graphics.Paint;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -119,9 +122,10 @@ public class MainActivity extends Activity {
             androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
             androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED ||
             androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE) != PackageManager.PERMISSION_GRANTED ||
+            androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) != PackageManager.PERMISSION_GRANTED ||
             androidx.core.content.ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
 
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.FOREGROUND_SERVICE, Manifest.permission.VIBRATE },1);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.FOREGROUND_SERVICE, Manifest.permission.VIBRATE, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS },1);
 
         }
 
@@ -201,15 +205,14 @@ public class MainActivity extends Activity {
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapController = mapView.getController();
         mapController.setZoom(19d);
-        double[] currentLocation = getLocation();
-
-        currentPoint = new GeoPoint(currentLocation[0], currentLocation[1]);
-        mapController.setCenter(currentPoint);
 
         GpsMyLocationProvider prov= new GpsMyLocationProvider(getApplicationContext());
         prov.addLocationSource(LocationManager.NETWORK_PROVIDER);
         MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(prov, mapView);
         mapView.getOverlayManager().add(locationOverlay);
+        double[] currentLocation = getLocation();
+        currentPoint = new GeoPoint(currentLocation[0], currentLocation[1]);
+        mapController.setCenter(currentPoint);
         settingUpCrossroadsIfExists();
     }
 
@@ -341,11 +344,7 @@ public class MainActivity extends Activity {
     private void disableBatteryRestrictionsDialog() {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Выполните действия перед началом работы")
-                        .setMessage("Для корректной работы приложения нужно попросить телефон не выключать его: \n" +
-                                "1. Ненадолго зажмите иконку приложения на экране \n" +
-                                "2. Нажмите «О приложении» \n" +
-                                "3. Выберите «Контроль активности» \n" +
-                                "4. Выберите «Нет ограничений»")
+                        .setMessage("Для корректной работы приложения нужно сказать телефону не выключать его через несколько минут работы")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Toast.makeText(getApplicationContext(), "Соглашение принято", Toast.LENGTH_LONG).show();
@@ -353,6 +352,8 @@ public class MainActivity extends Activity {
                                 SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
                                 prefsEditor.putBoolean("license_confirmed", true);
                                 prefsEditor.commit();
+                                disableBatteryRestrictions();
+
                             }
                         })
                         .setView(findViewById(R.layout.activity_main))
@@ -361,6 +362,19 @@ public class MainActivity extends Activity {
                         .show();
 
 
+    }
+
+    private void disableBatteryRestrictions() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
+        }
     }
 
 
